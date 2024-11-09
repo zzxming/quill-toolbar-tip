@@ -1,4 +1,6 @@
-.tooltip {
+$namspace: toolbar-tip;
+
+.#{$namspace}__tooltip {
   position: absolute;
   z-index: 20;
   padding: 4px 12px;
