@@ -10,9 +10,7 @@ npm install quill-toolbar-tip
 
 Add the text you want to display in the tooltip. The keys matchs the toolbar format name.
 
-You can set specify tip with `key:value`. For setting the tip text 'Unordered List' for a bullet list, you can use 'list: bullet': 'Unordered List'`
-
-```js
+```ts
 import QuillToolbarTip from 'quill-toolbar-tip';
 import 'quill-toolbar-tip/dist/index.css';
 
@@ -20,34 +18,64 @@ Quill.register({
   [`modules/${QuillToolbarTip.moduleName}`]: QuillToolbarTip,
 }, true);
 
+const QuillToolbarTipOption = {
+  tipTextMap: {
+    bold: 'Bold',
+    italic: 'Italic',
+    color: {
+      onShow(target, value) {
+        return `Font Color${value ? `: ${value}` : ''}`;
+      },
+    },
+    background: {
+      onShow(target, value) {
+        return `Background Color${value ? `: ${value}` : ''}`;
+      },
+    },
+  }
+};
+
 const quill = new Quill('#editor', {
   theme: 'snow',
   modules: {
     toolbar: [
       ['bold', 'italic',],
       [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
       [{ color: [] }, { background: [] }],
     ],
-    [QuillToolbarTip.moduleName]: {
-      tipTextMap: {
-        'bold': 'Bold',
-        'italic': 'Italic',
-        'list:ordered': 'Ordered List',
-        'list:bullet': 'Unordered List',
-        'color': {
-          onShow(target, value) {
-            return `Font Color${value ? `: ${value}` : ''}`;
-          },
-        },
-        'background': {
-          onShow(target, value) {
-            return `Background Color${value ? `: ${value}` : ''}`;
-          },
-        },
-      }
-    }
+    [QuillToolbarTip.moduleName]: QuillToolbarTipOption
   },
 });
+```
+
+You can set specify tip with `key:value`. For setting the tip text 'Unordered List' for a bullet list, you can use 'list: bullet': 'Unordered List'`
+
+```ts
+const QuillToolbarTipOption = {
+  tipTextMap: {
+    'list:ordered': 'Ordered List',
+    'list:bullet': 'Unordered List',
+  }
+};
+```
+
+You also can set an options for the key, and use the `onShow` to calculate the text of the tooltip. but you should use the `onShow` option, the `msg` / `content` or string value will be ignored. The final display text will be the item value.
+
+```ts
+const QuillToolbarTipOption = {
+  tipTextMap: {
+    script: {
+      onShow(target, value) {
+        const text = {
+          sub: 'Subscript',
+          super: 'Superscript',
+        };
+        return text[value] || null;
+      },
+    },
+  }
+};
 ```
 
 ## Options
