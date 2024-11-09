@@ -8,7 +8,6 @@ export interface ToolTipOptions {
   delay: number;
   content: HTMLElement;
   className: string | string[];
-  disabled: boolean;
   distance: number;
   onShow: (target: HTMLElement) => string | HTMLElement | undefined;
 }
@@ -19,12 +18,10 @@ export const createToolTip = (target: HTMLElement, options: Partial<ToolTipOptio
     delay = 150,
     content,
     direction = 'top',
-    disabled = false,
     className = [],
     distance = 8,
     onShow,
   } = Object.assign(tooltipDefaultOptions, options);
-  if (disabled) return null;
   if (isString(className)) {
     className = ensureArray(className.split(' '));
   }
