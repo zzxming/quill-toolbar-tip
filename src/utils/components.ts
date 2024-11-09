@@ -2,7 +2,7 @@ import { tooltipDefaultOptions } from '../constants';
 import { limitDomInViewPort } from './position';
 import { ensureArray, isString } from './types';
 
-export interface ToolTipOptions {
+export interface TooltipOptions {
   direction: 'top' | 'right' | 'bottom' | 'left';
   msg: string;
   delay: number;
@@ -12,7 +12,7 @@ export interface ToolTipOptions {
   onShow: (target: HTMLElement) => string | HTMLElement | undefined;
 }
 let tooltipContainer: HTMLElement;
-export const createToolTip = (target: HTMLElement, options: Partial<ToolTipOptions> = {}) => {
+export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptions> = {}) => {
   let {
     msg = '',
     delay = 150,

@@ -1,20 +1,20 @@
 import type Quill from 'quill';
 import type Toolbar from 'quill/modules/toolbar';
-import type { ToolTipOptions } from './utils';
+import type { TooltipOptions } from './utils';
 import { tooltipDefaultOptions } from './constants';
-import { createToolTip, isString, isUndefined } from './utils';
+import { createTooltip, isString, isUndefined } from './utils';
 
-export interface ToolTipItem extends Omit<ToolTipOptions, 'onShow'> {
+export interface TooltipItem extends Omit<TooltipOptions, 'onShow'> {
   onShow: (target: HTMLElement, value: string) => string | HTMLElement;
 }
 
 export interface QuillToolbarTipOptions {
-  tipTextMap: Record<string, Partial<ToolTipItem> | string>;
-  defaultToolTipOptions: Partial<ToolTipOptions>;
+  tipTextMap: Record<string, Partial<TooltipItem> | string>;
+  defaultTooltipOptions: Partial<TooltipOptions>;
 }
 export class QuillToolbarTip {
   static moduleName = 'toolbarTip';
-  options: Omit<QuillToolbarTipOptions, 'defaultToolTipOptions'>;
+  options: Omit<QuillToolbarTipOptions, 'defaultTooltipOptions'>;
   toolbar: Toolbar;
   constructor(
     public quill: Quill,
@@ -37,7 +37,7 @@ export class QuillToolbarTip {
   }
 
   resolveOptions(options: Partial<QuillToolbarTipOptions>) {
-    Object.assign(tooltipDefaultOptions, options.defaultToolTipOptions);
+    Object.assign(tooltipDefaultOptions, options.defaultTooltipOptions);
     return {
       tipTextMap: options.tipTextMap || {},
     };
@@ -59,7 +59,7 @@ export class QuillToolbarTip {
       }
       const targetLabel = this.getControlLabel(toolControlItem);
       if (!targetLabel || (isUndefined(currentControlOption) && isUndefined(parentOptions))) continue;
-      createToolTip(targetLabel, {
+      createTooltip(targetLabel, {
         ...currentControlOption,
         onShow(target: HTMLElement) {
           let result: string | HTMLElement = toolControl.value;

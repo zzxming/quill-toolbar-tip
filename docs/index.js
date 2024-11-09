@@ -12,36 +12,36 @@ const toolbar = [
   [{ color: [] }, { background: [] }],
 ];
 const ToolbarTipOptions = {
-  defaultToolTipOptions: {
+  defaultTooltipOptions: {
     direction: 'bottom',
   },
   tipTextMap: {
-    'bold': '加粗',
-    'italic': '斜体',
-    'underline': '下划线',
-    'strike': '删除线',
-    'list:ordered': '有序列表',
-    'list:bullet': '无序列表',
-    'list:check': '待办事项',
+    'bold': 'Bold',
+    'italic': 'Italic',
+    'underline': 'Underline',
+    'strike': 'Strike',
+    'list:ordered': 'Ordered List',
+    'list:bullet': 'Unordered List',
+    'list:check': 'Todo List',
     'script': {
       onShow(target, value) {
         const text = {
-          sub: '下标',
-          super: '上标',
+          sub: 'Subscript',
+          super: 'Superscript',
         };
         return text[value] || null;
       },
     },
-    'size': '字体大小',
-    'header': '标题',
+    'size': 'Font Size',
+    'header': 'Title',
     'color': {
       onShow(target, value) {
-        return `字体颜色${value ? `: ${value}` : ''}`;
+        return `Font Color${value ? `: ${value}` : ''}`;
       },
     },
     'background': {
       onShow(target, value) {
-        return `背景颜色${value ? `: ${value}` : ''}`;
+        return `Background Color${value ? `: ${value}` : ''}`;
       },
     },
   },
