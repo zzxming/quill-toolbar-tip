@@ -1,0 +1,7 @@
+dist
+node_modules
+
+.eslintcache
+
+docs/dev.*
+docs/*.css

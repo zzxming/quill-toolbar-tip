@@ -1,0 +1,42 @@
+{
+  "name": "quill-toolbar-tip",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "a module for quill toolbar set tip text",
+  "author": "zzxmming",
+  "license": "MIT",
+  "keywords": [
+    "quill",
+    "module",
+    "toolbar"
+  ],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint . --cache",
+    "build": "gulp --require @esbuild-kit/cjs-loader",
+    "dev": "gulp --require @esbuild-kit/cjs-loader dev"
+  },
+  "peerDependencies": {
+    "quill": "^2.0.0"
+  },
+  "devDependencies": {
+    "@esbuild-kit/cjs-loader": "^2.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "@zzxming/eslint-config": "^0.3.2",
+    "autoprefixer": "^10.4.20",
+    "esbuild-sass-plugin": "^3.3.1",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-postcss": "^10.0.0",
+    "gulp-sass": "^5.1.0",
+    "rollup": "^4.18.1",
+    "rollup-plugin-dts": "^6.1.1",
+    "sass": "^1.80.6",
+    "typescript": "^5.6.3"
+  }
+}
