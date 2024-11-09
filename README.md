@@ -14,6 +14,7 @@ You can set specify tip with `key:value`. For setting the tip text 'Unordered Li
 
 ```js
 import QuillToolbarTip from 'quill-toolbar-tip';
+import 'quill-toolbar-tip/dist/index.css';
 
 Quill.register({
   [`modules/${QuillToolbarTip.moduleName}`]: QuillToolbarTip,
