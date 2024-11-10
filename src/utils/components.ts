@@ -1,6 +1,12 @@
-import { createPopper } from '@popperjs/core';
+import flip from '@popperjs/core/lib/modifiers/flip';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import { defaultModifiers, popperGenerator } from '@popperjs/core/lib/popper-lite';
 import { tooltipDefaultOptions } from '../constants';
 import { ensureArray, isString } from './types';
+
+const createPopper = popperGenerator({
+  defaultModifiers: [...defaultModifiers, flip, preventOverflow],
+});
 
 export interface TooltipOptions {
   direction: 'top' | 'right' | 'bottom' | 'left';
