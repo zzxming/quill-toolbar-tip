@@ -96,17 +96,30 @@ const QuillToolbarTipOption = {
 | msg       | The message of the tooltip                                                                 |
 | content   | The content of the tooltip                                                                 |
 | className | The class name of the tooltip                                                              |
-| distance  | Distance between toolbar item and tooltip                                                  |
 | onShow    | Callback when tooltip show. If `onShow` return `undefined`, the tooltip will not be shown. |
 
 ```ts
 interface TooltipOptions {
-  direction: 'top' | 'right' | 'bottom' | 'left';
+  direction:
+    | 'auto'
+    | 'auto-start'
+    | 'auto-end'
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'right'
+    | 'right-start'
+    | 'right-end'
+    | 'left'
+    | 'left-start'
+    | 'left-end';
   msg: string;
   delay: number;
   content: HTMLElement;
   className: string | string[];
-  distance: number;
   onShow: (target: HTMLElement) => string | HTMLElement | undefined;
 }
 ```
@@ -146,6 +159,5 @@ const tooltipDefaultOptions = {
   delay: 150,
   direction: 'top',
   className: [] as string[],
-  distance: 8,
 };
 ```

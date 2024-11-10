@@ -13,7 +13,7 @@ const toolbar = [
 ];
 const ToolbarTipOptions = {
   defaultTooltipOptions: {
-    direction: 'bottom',
+    direction: 'top',
   },
   tipTextMap: {
     'bold': 'Bold',

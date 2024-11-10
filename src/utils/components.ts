@@ -8,8 +8,24 @@ const createPopper = popperGenerator({
   defaultModifiers: [...defaultModifiers, flip, preventOverflow],
 });
 
+export type Placement =
+  | 'auto'
+  | 'auto-start'
+  | 'auto-end'
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
 export interface TooltipOptions {
-  direction: 'top' | 'right' | 'bottom' | 'left';
+  direction: Placement;
   msg: string;
   delay: number;
   content: HTMLElement;
