@@ -9,6 +9,7 @@ import postcss from 'gulp-postcss';
 import gulpSass from 'gulp-sass';
 import { rollup } from 'rollup';
 import { dts } from 'rollup-plugin-dts';
+import { terser } from 'rollup-plugin-terser';
 import sass from 'sass';
 
 const sassPlugin = gulpSass(sass);
@@ -31,7 +32,7 @@ const buildDts = async () => {
   });
 };
 const buildTs = async (isDev: boolean = false) => {
-  const plugins = [typescript({ tsconfig: './tsconfig.json' }), nodeResolve()];
+  const plugins = [typescript({ tsconfig: './tsconfig.json' }), nodeResolve(), terser()];
   const bundle = await rollup({
     input: './src/index.ts',
     external: [/^quill/],
