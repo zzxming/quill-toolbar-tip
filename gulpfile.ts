@@ -1,5 +1,6 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
 import { dest, parallel, series, src, task, watch } from 'gulp';
@@ -17,14 +18,12 @@ const distBundle = resolve(__dirname, './dist');
 const demoBundle = resolve(__dirname, './docs');
 
 const buildDts = async () => {
-  const bundle = await rollup(
-    {
-      input: './src/index.ts',
-      external: [/^quill/],
-      treeshake: true,
-      plugins: [dts()],
-    },
-  );
+  const bundle = await rollup({
+    input: './src/index.ts',
+    external: [/^quill/],
+    treeshake: true,
+    plugins: [dts()],
+  });
   return bundle.write({
     file: resolve(distBundle, 'index.d.ts'),
     sourcemap: false,
@@ -32,15 +31,13 @@ const buildDts = async () => {
   });
 };
 const buildTs = async (isDev: boolean = false) => {
-  const plugins = [typescript({ tsconfig: './tsconfig.json' })];
-  const bundle = await rollup(
-    {
-      input: './src/index.ts',
-      external: [/^quill/],
-      treeshake: true,
-      plugins,
-    },
-  );
+  const plugins = [typescript({ tsconfig: './tsconfig.json' }), nodeResolve()];
+  const bundle = await rollup({
+    input: './src/index.ts',
+    external: [/^quill/],
+    treeshake: true,
+    plugins,
+  });
   if (isDev) {
     await bundle.write({
       file: resolve(demoBundle, 'dev.js'),

@@ -1,5 +1,5 @@
+import { createPopper } from '@popperjs/core';
 import { tooltipDefaultOptions } from '../constants';
-import { limitDomInViewPort } from './position';
 import { ensureArray, isString } from './types';
 
 export interface TooltipOptions {
@@ -8,7 +8,6 @@ export interface TooltipOptions {
   delay: number;
   content: HTMLElement;
   className: string | string[];
-  distance: number;
   onShow: (target: HTMLElement) => string | HTMLElement | undefined;
 }
 let tooltipContainer: HTMLElement;
@@ -19,7 +18,6 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
     content,
     direction = 'top',
     className = [],
-    distance = 8,
     onShow,
   } = Object.assign(tooltipDefaultOptions, options);
   if (isString(className)) {
@@ -32,6 +30,25 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
     }
     const tooltip = document.createElement('div');
     tooltip.classList.add('toolbar-tip__tooltip', 'hidden', 'transparent', ...className);
+    tooltipContainer.appendChild(tooltip);
+
+    const popperInstance = createPopper(target, tooltip, {
+      placement: direction,
+      modifiers: [
+        {
+          name: 'preventOverflow',
+          options: {
+            altAxis: true,
+          },
+        },
+        {
+          name: 'flip',
+          options: {
+            padding: 8,
+          },
+        },
+      ],
+    });
 
     const setTooltipContent = () => {
       if (content) {
@@ -62,7 +79,7 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
         tooltipContainer.removeChild(tooltip);
       }
     };
-    const open = () => {
+    function show() {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         // empty content will not display
@@ -72,43 +89,21 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
         tooltipContainer.appendChild(tooltip);
         tooltip.removeEventListener('transitionend', transitionendHandler);
         tooltip.classList.remove('hidden');
-        const elRect = target.getBoundingClientRect();
-        const contentRect = tooltip.getBoundingClientRect();
-        const extraPositionMap = {
-          top: {
-            top: -contentRect.height - distance,
-            left: elRect.width / 2 - contentRect.width / 2,
-          },
-          right: {
-            top: elRect.height / 2 - contentRect.height / 2,
-            left: elRect.width + distance,
-          },
-          bottom: {
-            top: contentRect.height + distance,
-            left: elRect.width / 2 - contentRect.width / 2,
-          },
-          left: {
-            top: elRect.height / 2 - contentRect.height / 2,
-            left: -contentRect.width - distance,
 
-          },
-        } as const;
-        const extra = extraPositionMap[direction];
-        let top = elRect.top + extra.top;
-        let left = elRect.left + extra.left;
-        Object.assign(tooltip.style, {
-          top: `${top + window.scrollY}px`,
-          left: `${left + window.scrollX}px`,
-        });
-        ({ top, left } = limitDomInViewPort(tooltip.getBoundingClientRect()));
-        Object.assign(tooltip.style, {
-          top: `${top + window.scrollY}px`,
-          left: `${left + window.scrollX}px`,
-        });
+        popperInstance.setOptions(options => ({
+          ...options,
+          modifiers: [
+            ...options.modifiers!,
+            { name: 'eventListeners', enabled: true },
+          ],
+        }));
+        popperInstance.update();
+
         tooltip.classList.remove('transparent');
       }, delay);
-    };
-    const close = () => {
+    }
+
+    function hide() {
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         tooltip.classList.add('transparent');
@@ -118,12 +113,13 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
           transitionendHandler();
         }, 150);
       }, delay);
-    };
-    target.addEventListener('mouseenter', open);
-    target.addEventListener('mouseleave', close);
-    tooltip.addEventListener('mouseenter', open);
-    tooltip.addEventListener('mouseleave', close);
-    return tooltip;
+    }
+
+    const eventListeners = [target, tooltip];
+    for (const listener of eventListeners) {
+      listener.addEventListener('mouseenter', show);
+      listener.addEventListener('mouseleave', hide);
+    }
   }
   return null;
 };
