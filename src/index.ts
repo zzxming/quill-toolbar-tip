@@ -36,7 +36,7 @@ export class QuillToolbarTip {
     }
   }
 
-  resolveOptions(options: Partial<QuillToolbarTipOptions>) {
+  resolveOptions(options: Partial<QuillToolbarTipOptions>): Omit<QuillToolbarTipOptions, 'defaultTooltipOptions'> {
     Object.assign(tooltipDefaultOptions, options.defaultTooltipOptions);
     return {
       tipTextMap: options.tipTextMap || {},
