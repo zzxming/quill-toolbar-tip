@@ -1,7 +1,5 @@
-import { factory } from '@zzxming/eslint-config'
+import { factory } from '@zzxming/eslint-config';
 
 export default factory({
-  overrides: [
-    
-  ]
+  overrides: [],
 });
