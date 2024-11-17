@@ -3,5 +3,4 @@ export const tooltipDefaultOptions = {
   delay: 150,
   direction: 'top',
   className: [] as string[],
-  distance: 8,
 };
