@@ -41,7 +41,7 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
     direction = 'top',
     className = [],
     onShow,
-  } = Object.assign(tooltipDefaultOptions, options);
+  } = Object.assign({}, tooltipDefaultOptions, options);
   if (isString(className)) {
     className = ensureArray(className.split(' '));
   }

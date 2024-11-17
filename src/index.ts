@@ -14,7 +14,7 @@ export interface QuillToolbarTipOptions {
 }
 export class QuillToolbarTip {
   static moduleName = 'toolbarTip';
-  options: Omit<QuillToolbarTipOptions, 'defaultTooltipOptions'>;
+  options: QuillToolbarTipOptions;
   toolbar: Toolbar;
   constructor(
     public quill: Quill,
@@ -36,9 +36,9 @@ export class QuillToolbarTip {
     }
   }
 
-  resolveOptions(options: Partial<QuillToolbarTipOptions>): Omit<QuillToolbarTipOptions, 'defaultTooltipOptions'> {
-    Object.assign(tooltipDefaultOptions, options.defaultTooltipOptions);
+  resolveOptions(options: Partial<QuillToolbarTipOptions>): QuillToolbarTipOptions {
     return {
+      defaultTooltipOptions: Object.assign({}, tooltipDefaultOptions, options.defaultTooltipOptions),
       tipTextMap: options.tipTextMap || {},
     };
   }
@@ -60,6 +60,7 @@ export class QuillToolbarTip {
       const targetLabel = this.getControlLabel(toolControlItem);
       if (!targetLabel || (isUndefined(currentControlOption) && isUndefined(parentOptions))) continue;
       createTooltip(targetLabel, {
+        ...this.options.defaultTooltipOptions,
         ...currentControlOption,
         onShow(target: HTMLElement) {
           let result: ReturnType<TooltipItem['onShow']> = toolControl.value;
