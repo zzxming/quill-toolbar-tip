@@ -30,7 +30,7 @@ export interface TooltipOptions {
   delay: number;
   content: HTMLElement;
   className: string | string[];
-  onShow: (target: HTMLElement) => string | HTMLElement | undefined;
+  onShow: (target: HTMLElement) => string | HTMLElement | undefined | null;
 }
 let tooltipContainer: HTMLElement;
 export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptions> = {}) => {
