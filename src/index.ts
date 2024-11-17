@@ -1,6 +1,6 @@
 import type Quill from 'quill';
 import type Toolbar from 'quill/modules/toolbar';
-import type { TooltipOptions } from './utils';
+import type { TooltipInstance, TooltipOptions } from './utils';
 import { tooltipDefaultOptions } from './constants';
 import { createTooltip, isString, isUndefined } from './utils';
 
@@ -13,9 +13,10 @@ export interface QuillToolbarTipOptions {
   defaultTooltipOptions: Partial<TooltipOptions>;
 }
 export class QuillToolbarTip {
-  static moduleName = 'toolbarTip';
+  static moduleName = 'toolbar-tip';
   options: QuillToolbarTipOptions;
   toolbar: Toolbar;
+  toolbarTips: [string, TooltipInstance][] = [];
   constructor(
     public quill: Quill,
     options: Partial<QuillToolbarTipOptions>,
@@ -59,7 +60,7 @@ export class QuillToolbarTip {
       }
       const targetLabel = this.getControlLabel(toolControlItem);
       if (!targetLabel || (isUndefined(currentControlOption) && isUndefined(parentOptions))) continue;
-      createTooltip(targetLabel, {
+      const instance = createTooltip(targetLabel, {
         ...this.options.defaultTooltipOptions,
         ...currentControlOption,
         onShow(target: HTMLElement) {
@@ -74,11 +75,30 @@ export class QuillToolbarTip {
           return currentControlResult || result;
         },
       });
+      if (instance) {
+        this.toolbarTips.push([toolName, instance]);
+      }
     }
   }
 
   getControlLabel([_, target]: [ string, HTMLButtonElement | HTMLSelectElement]) {
     return target.tagName.toLowerCase() === 'button' ? target : target.previousElementSibling as HTMLElement | null;
+  }
+
+  destroyAllTips() {
+    const tips = this.toolbarTips;
+    if (tips.length === 0) return;
+    for (const [, item] of tips) {
+      item.instance.destroy();
+    }
+  }
+
+  hideAllTips() {
+    const tips = this.toolbarTips;
+    if (tips.length === 0) return;
+    for (const [,item] of tips) {
+      item.hide();
+    }
   }
 }
 

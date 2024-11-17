@@ -1,3 +1,4 @@
+import type { Instance } from '@popperjs/core/lib/popper-lite';
 import flip from '@popperjs/core/lib/modifiers/flip';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { defaultModifiers, popperGenerator } from '@popperjs/core/lib/popper-lite';
@@ -32,8 +33,13 @@ export interface TooltipOptions {
   className: string | string[];
   onShow: (target: HTMLElement) => string | HTMLElement | undefined | null;
 }
+export interface TooltipInstance {
+  instance: Instance;
+  hide: () => void;
+  show: () => void;
+}
 let tooltipContainer: HTMLElement;
-export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptions> = {}) => {
+export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptions> = {}): TooltipInstance | null => {
   let {
     msg = '',
     delay = 150,
@@ -142,7 +148,21 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
       listener.addEventListener('mouseenter', show);
       listener.addEventListener('mouseleave', hide);
     }
+    const originDestroy = popperInstance.destroy;
+    popperInstance.destroy = function () {
+      for (const listener of eventListeners) {
+        listener.removeEventListener('mouseenter', show);
+        listener.removeEventListener('mouseleave', hide);
+      }
+      originDestroy.call(this);
+    };
+
     hide();
+    return {
+      instance: popperInstance,
+      show,
+      hide,
+    };
   }
   return null;
 };

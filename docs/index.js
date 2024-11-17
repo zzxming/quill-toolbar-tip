@@ -25,10 +25,28 @@ const ToolbarTipOptions = {
   tipTextMap: window.QuillToolbarTip.defaultToolbarTip['en-US'],
 };
 
-const _quill1 = new Quill('#editor1', {
+const quill1 = new Quill('#editor1', {
   theme: 'snow',
   modules: {
     toolbar,
     [QuillToolbarTip.moduleName]: ToolbarTipOptions,
   },
+});
+const quill2 = new Quill('#editor2', {
+  theme: 'bubble',
+  modules: {
+    toolbar,
+    [QuillToolbarTip.moduleName]: ToolbarTipOptions,
+  },
+});
+
+document.getElementById('destroy-tips').addEventListener('click', () => {
+  for (const quill of [quill1, quill2]) {
+    quill.getModule(QuillToolbarTip.moduleName).destroyAllTips();
+  }
+});
+document.getElementById('hide-tips').addEventListener('click', () => {
+  for (const quill of [quill1, quill2]) {
+    quill.getModule(QuillToolbarTip.moduleName).hideAllTips();
+  }
 });
