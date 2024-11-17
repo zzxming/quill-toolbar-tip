@@ -142,6 +142,7 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
       listener.addEventListener('mouseenter', show);
       listener.addEventListener('mouseleave', hide);
     }
+    hide();
   }
   return null;
 };
