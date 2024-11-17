@@ -10,7 +10,35 @@ npm install quill-toolbar-tip
 
 ## Usage
 
-Add the text you want to display in the tooltip. The keys matchs the toolbar format name.
+If you want to use English text, you can use the default tip text that export named `defaultToolbarTip`
+
+```ts
+import QuillToolbarTip, { defaultToolbarTip } from 'quill-toolbar-tip';
+import 'quill-toolbar-tip/dist/index.css';
+
+Quill.register({
+  [`modules/${QuillToolbarTip.moduleName}`]: QuillToolbarTip,
+}, true);
+
+const QuillToolbarTipOption = {
+  tipTextMap: defaultToolbarTip['en-US']
+};
+
+const quill = new Quill('#editor', {
+  theme: 'snow',
+  modules: {
+    toolbar: [
+      ['bold', 'italic',],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ color: [] }, { background: [] }],
+    ],
+    [QuillToolbarTip.moduleName]: QuillToolbarTipOption
+  },
+});
+```
+
+Or you can add the text in `tipTextMap` to display in the tooltip. The keys matchs the toolbar format name.
 
 ```ts
 import QuillToolbarTip from 'quill-toolbar-tip';

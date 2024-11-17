@@ -7,56 +7,26 @@ Quill.register({
 
 const toolbar = [
   ['bold', 'italic', 'underline', 'strike'],
-  [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { script: 'sub' }, { script: 'super' }, { script: 'invalid' }],
-  [{ size: ['small', false, 'large', 'huge'] }, { header: [1, 2, 3, 4, 5, 6, false] }],
+  [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { script: 'sub' }, { script: 'super' }],
   [{ color: [] }, { background: [] }],
+  ['blockquote', 'code-block', 'clean'],
+  ['link', 'image', 'video', 'formula'],
+  ['direction', { direction: 'rtl' }],
+  [{ header: 1 }, { header: 2 }],
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  [{ size: ['small', false, 'large', 'huge'] }],
+  [{ font: [] }],
+  [{ align: [] }, { align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
 ];
 const ToolbarTipOptions = {
   defaultTooltipOptions: {
     direction: 'top',
   },
-  tipTextMap: {
-    'bold': 'Bold',
-    'italic': 'Italic',
-    'underline': 'Underline',
-    'strike': 'Strike',
-    'list:ordered': 'Ordered List',
-    'list:bullet': 'Unordered List',
-    'list:check': 'Todo List',
-    'script': {
-      onShow(target, value) {
-        const text = {
-          sub: 'Subscript',
-          super: 'Superscript',
-        };
-        return text[value] || null;
-      },
-    },
-    'size': 'Font Size',
-    'header': 'Title',
-    'color': {
-      onShow(target, value) {
-        return `Font Color${value ? `: ${value}` : ''}`;
-      },
-    },
-    'background': {
-      onShow(target, value) {
-        return `Background Color${value ? `: ${value}` : ''}`;
-      },
-    },
-  },
+  tipTextMap: window.QuillToolbarTip.defaultToolbarTip['en-US'],
 };
 
 const _quill1 = new Quill('#editor1', {
   theme: 'snow',
-  modules: {
-    toolbar,
-    [QuillToolbarTip.moduleName]: ToolbarTipOptions,
-  },
-});
-
-const _quill2 = new Quill('#editor2', {
-  theme: 'bubble',
   modules: {
     toolbar,
     [QuillToolbarTip.moduleName]: ToolbarTipOptions,
