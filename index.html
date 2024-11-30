@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Quill Table Module Demo</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, viewport-fit=cover"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.bubble.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet" />
+    <script type="module" src="./dev.js"></script>
+    <link href="./index.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <button id="destroy-tips">destroy tips</button>
+    <button id="hide-tips">hide tips</button>
+    <div style="display: flex; flex-direction: column; width: 80%; margin: auto">
+      <div>
+        <div id="editor1" style="height: 200px"></div>
+      </div>
+      <div>
+        <div id="editor2" style="height: 200px"></div>
+      </div>
+    </div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
