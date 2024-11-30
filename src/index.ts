@@ -89,7 +89,7 @@ export class QuillToolbarTip {
     const tips = this.toolbarTips;
     if (tips.length === 0) return;
     for (const [, item] of tips) {
-      item.instance.destroy();
+      item.destroy();
     }
   }
 

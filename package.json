@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.0.4",
   "packageManager": "pnpm@9.9.0",
+  "description": "a module for quill toolbar set tip text",
+  "author": "zzxmming",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zzxming/quill-toolbar-tip"
   },
-  "description": "a module for quill toolbar set tip text",
-  "author": "zzxmming",
-  "license": "MIT",
   "keywords": [
     "quill",
     "module",
@@ -29,7 +29,7 @@
     "quill": "^2.0.0"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.8"
+    "@floating-ui/dom": "^1.6.12"
   },
   "devDependencies": {
     "@esbuild-kit/cjs-loader": "^2.4.4",

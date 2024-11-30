@@ -1,18 +1,9 @@
-import type { Instance } from '@popperjs/core/lib/popper-lite';
-import flip from '@popperjs/core/lib/modifiers/flip';
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
-import { defaultModifiers, popperGenerator } from '@popperjs/core/lib/popper-lite';
+import { autoUpdate, computePosition, flip, limitShift, offset, shift } from '@floating-ui/dom';
 import { tooltipDefaultOptions } from '../constants';
+import { handleIfTransitionend } from './handler-utils';
 import { ensureArray, isString } from './types';
 
-const createPopper = popperGenerator({
-  defaultModifiers: [...defaultModifiers, flip, preventOverflow],
-});
-
 export type Placement =
-  | 'auto'
-  | 'auto-start'
-  | 'auto-end'
   | 'top'
   | 'top-start'
   | 'top-end'
@@ -34,7 +25,8 @@ export interface TooltipOptions {
   onShow: (target: HTMLElement) => string | HTMLElement | undefined | null;
 }
 export interface TooltipInstance {
-  instance: Instance;
+  instance: HTMLElement;
+  destroy: () => void;
   hide: () => void;
   show: () => void;
 }
@@ -60,24 +52,6 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
     tooltip.classList.add('toolbar-tip__tooltip', 'hidden', 'transparent', ...className);
     tooltipContainer.appendChild(tooltip);
 
-    const popperInstance = createPopper(target, tooltip, {
-      placement: direction,
-      modifiers: [
-        {
-          name: 'preventOverflow',
-          options: {
-            altAxis: true,
-          },
-        },
-        {
-          name: 'flip',
-          options: {
-            padding: 8,
-          },
-        },
-      ],
-    });
-
     const setTooltipContent = () => {
       if (content) {
         tooltip.appendChild(content);
@@ -101,11 +75,24 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
     };
 
     let timer: ReturnType<typeof setTimeout> | null;
+    let cleanup: () => void;
+    const update = () => {
+      computePosition(target, tooltip, {
+        placement: direction,
+        middleware: [flip(), shift({ limiter: limitShift() }), offset(8)],
+      }).then(({ x, y }) => {
+        Object.assign(tooltip.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+      });
+    };
     const transitionendHandler = () => {
       tooltip.classList.add('hidden');
       if (tooltipContainer.contains(tooltip)) {
         tooltipContainer.removeChild(tooltip);
       }
+      if (cleanup) cleanup();
     };
     function show() {
       if (timer) clearTimeout(timer);
@@ -118,14 +105,7 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
         tooltip.removeEventListener('transitionend', transitionendHandler);
         tooltip.classList.remove('hidden');
 
-        popperInstance.setOptions(options => ({
-          ...options,
-          modifiers: [
-            ...options.modifiers!,
-            { name: 'eventListeners', enabled: true },
-          ],
-        }));
-        popperInstance.update();
+        cleanup = autoUpdate(target, tooltip, update);
 
         tooltip.classList.remove('transparent');
       }, delay);
@@ -135,11 +115,7 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         tooltip.classList.add('transparent');
-        tooltip.addEventListener('transitionend', transitionendHandler, { once: true });
-        // handle remove when transition set none
-        setTimeout(() => {
-          transitionendHandler();
-        }, 150);
+        handleIfTransitionend(tooltip, 150, transitionendHandler, { once: true });
       }, delay);
     }
 
@@ -148,18 +124,20 @@ export const createTooltip = (target: HTMLElement, options: Partial<TooltipOptio
       listener.addEventListener('mouseenter', show);
       listener.addEventListener('mouseleave', hide);
     }
-    const originDestroy = popperInstance.destroy;
-    popperInstance.destroy = function () {
+
+    const destroy = () => {
       for (const listener of eventListeners) {
         listener.removeEventListener('mouseenter', show);
         listener.removeEventListener('mouseleave', hide);
       }
-      originDestroy.call(this);
+      if (cleanup) cleanup();
+      tooltip.remove();
     };
 
     hide();
     return {
-      instance: popperInstance,
+      instance: tooltip,
+      destroy,
       show,
       hide,
     };
